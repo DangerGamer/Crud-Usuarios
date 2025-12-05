@@ -1,0 +1,8 @@
+package com.dm.crudusuarios.model
+
+data class UsuarioResponse <T>(
+    val success: Boolean,
+    val data: T?,
+    val message: String? = null,
+    val error: String? = null
+)
