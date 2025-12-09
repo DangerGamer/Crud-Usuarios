@@ -1,5 +1,7 @@
 package com.dm.crudusuarios.view.adapters
 
+import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +11,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.dm.crudusuarios.R
 import com.dm.crudusuarios.model.UsuarioModel
+import com.dm.crudusuarios.view.UpdateUser
 
-class UserAdapter(private var users: List<UsuarioModel>) :
+class UserAdapter(
+    private val context: Context,
+    private var users: List<UsuarioModel>
+) :
     RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
     private val logosM = listOf(
@@ -37,6 +43,7 @@ class UserAdapter(private var users: List<UsuarioModel>) :
         val tvEmail: TextView = view.findViewById(R.id.tvEmail)
         val tvTelefono: TextView = view.findViewById(R.id.tvTelefono)
         val tvDireccion: TextView = view.findViewById(R.id.tvDireccion)
+        val ivEditar: ImageView = view.findViewById(R.id.ivEditar)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
@@ -53,6 +60,12 @@ class UserAdapter(private var users: List<UsuarioModel>) :
         holder.tvEmail.text = user.usu_correo
         holder.tvTelefono.text = user.usu_telefono
         holder.tvDireccion.text = user.usu_direccion
+
+        holder.ivEditar.setOnClickListener {
+            val intent = Intent(context, UpdateUser::class.java)
+            intent.putExtra("usuario", users[position])
+            context.startActivity(intent)
+        }
     }
 
     override fun getItemCount(): Int = users.size

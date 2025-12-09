@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Crud Usuarios</string>
+    <string name="guardar">Guardar</string>
+    <string name="nombre">Nombre</string>
+    <string name="primer_apellido">Primer apellido</string>
+    <string name="segundo_apellido">Segundo apellido</string>
+    <string name="direccion">Dirección</string>
+    <string name="telefono">Teléfono</string>
+    <string name="correo">Correo</string>
+    <string name="ups_hubo_un_error_al_enviar_el_registro_nintenta_nuevamente_mas_tarde">Ups! hubo un error al enviar el registro\npor favor intenta nuevamente más tarde</string>
+    <string name="operacion_ejecutada_correctamente">Operación ejecutada correctamente</string>
 </resources>

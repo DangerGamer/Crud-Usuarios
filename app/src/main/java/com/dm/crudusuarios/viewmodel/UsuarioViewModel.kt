@@ -32,6 +32,22 @@ class UsuarioViewModel: ViewModel() {
         }
     }
 
+    fun fetchUsersByFilter(filter: String) {
+        viewModelScope.launch {
+            try {
+                val response = RetrofitClient.instance.getUserByFilter(filter)
+                if (response.success) {
+                    _users.value = response.data ?: emptyList()
+                } else {
+                    _error.value = response.error ?: "Error desconocido"
+                }
+            } catch (e: Exception) {
+                _error.value = "Error: ${e.message}"
+                println("Error: ${e.message}")
+            }
+        }
+    }
+
     fun addUser(usu_id: Int, usu_nombre: String, usu_papellido: String, usu_sapellido: String, usu_direccion: String, usu_telefono: String, usu_correo: String, usu_genero: String) {
         viewModelScope.launch {
             try {
