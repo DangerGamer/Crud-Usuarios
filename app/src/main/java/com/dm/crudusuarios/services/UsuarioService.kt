@@ -12,6 +12,9 @@ interface ApiService {
     @GET("users/filter")
     suspend fun getUserByFilter(@Query("filter") filter: String): UsuarioResponse<List<UsuarioModel>>
 
+    @GET("users/byid")
+    suspend fun getUserById(@Query("id") id: Int?): UsuarioResponse<UsuarioModel>
+
     @POST("users/create")
     suspend fun createUser(@Body body: UsuarioModel): UsuarioResponse<Unit>
 

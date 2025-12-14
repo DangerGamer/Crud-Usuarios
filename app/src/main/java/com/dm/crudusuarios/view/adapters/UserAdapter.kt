@@ -5,13 +5,12 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.dm.crudusuarios.R
 import com.dm.crudusuarios.model.UsuarioModel
-import com.dm.crudusuarios.view.UpdateUser
+import com.dm.crudusuarios.view.AdministrarUsuario
 
 class UserAdapter(
     private val context: Context,
@@ -62,8 +61,9 @@ class UserAdapter(
         holder.tvDireccion.text = user.usu_direccion
 
         holder.ivEditar.setOnClickListener {
-            val intent = Intent(context, UpdateUser::class.java)
-            intent.putExtra("usuario", users[position])
+            val intent = Intent(context, AdministrarUsuario::class.java)
+            intent.putExtra("id_usuario", users[position].usu_id)
+            intent.putExtra("crud", "editar")
             context.startActivity(intent)
         }
     }

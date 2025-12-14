@@ -9,17 +9,17 @@
     android:gravity="center">
 
     <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/lottieError"
+        android:id="@+id/lottieWarning"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        app:lottie_fileName="error.json"
+        app:lottie_fileName="warning.json"
         app:lottie_autoPlay="true"
         app:lottie_loop="false" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Error!"
+        android:text="Advertencia!"
         android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="@android:color/black"
@@ -27,10 +27,10 @@
         android:layout_gravity="center"/>
 
     <TextView
-        android:id="@+id/tvMensajeError"
+        android:id="@+id/tvMensajeWarning"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/ups_hubo_un_error_al_enviar_el_registro_nintenta_nuevamente_mas_tarde"
+        android:text="@string/ups_verifica_nuevamente_el_procedimiento"
         android:textSize="14sp"
         android:textColor="@android:color/black"
         android:layout_marginTop="8dp"
@@ -42,6 +42,6 @@
         android:layout_height="wrap_content"
         android:text="Aceptar"
         android:textColor="@android:color/white"
-        android:backgroundTint="@color/red"
+        android:backgroundTint="@color/naranja"
         android:layout_marginTop="24dp"/>
 </LinearLayout>
