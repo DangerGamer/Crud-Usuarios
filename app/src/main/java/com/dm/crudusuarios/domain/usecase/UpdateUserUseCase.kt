@@ -8,7 +8,6 @@ class UpdateUserUseCase(
     private val repository: UserRepository
 ) {
     suspend operator fun invoke(usuarioModel: UsuarioModel): UsuarioResponse<Unit> {
-        requireNotNull(usuarioModel){ "Usuario no puede ser null" }
         return repository.updateUser(usuarioModel)
     }
 }
