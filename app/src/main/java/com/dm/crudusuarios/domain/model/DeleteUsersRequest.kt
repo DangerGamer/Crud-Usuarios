@@ -1,4 +1,4 @@
-package com.dm.crudusuarios.model
+package com.dm.crudusuarios.domain.model
 
 data class DeleteUsersRequest (
     val usuarios: List<Int>

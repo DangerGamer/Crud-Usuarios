@@ -1,4 +1,4 @@
-package com.dm.crudusuarios.view.alerts
+package com.dm.crudusuarios.ui.view.alerts
 
 import android.content.Context
 import android.view.LayoutInflater

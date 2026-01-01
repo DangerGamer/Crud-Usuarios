@@ -1,6 +1,6 @@
-package com.dm.crudusuarios.view
+package com.dm.crudusuarios.ui.view
 
-import android.app.Activity
+import RetrofitClient
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
@@ -11,11 +11,16 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.dm.crudusuarios.R
+import com.dm.crudusuarios.data.repository.UserRepositoryImpl
 import com.dm.crudusuarios.databinding.ActivityAdministracionUsuarioBinding
-import com.dm.crudusuarios.model.UsuarioModel
-import com.dm.crudusuarios.view.alerts.AlertaError
-import com.dm.crudusuarios.view.alerts.AlertaExito
-import com.dm.crudusuarios.viewmodel.AdministrarUsuarioViewModel
+import com.dm.crudusuarios.domain.model.UsuarioModel
+import com.dm.crudusuarios.domain.usecase.CreateUserUseCase
+import com.dm.crudusuarios.domain.usecase.GetUserByIdUseCase
+import com.dm.crudusuarios.domain.usecase.UpdateUserUseCase
+import com.dm.crudusuarios.ui.view.alerts.AlertaError
+import com.dm.crudusuarios.ui.view.alerts.AlertaExito
+import com.dm.crudusuarios.ui.viewmodel.AdministrarUsuarioViewModel
+import com.dm.crudusuarios.ui.viewmodel.factory.AdministrarUsuarioViewModelFactory
 
 class AdministrarUsuario : AppCompatActivity() {
     private lateinit var binding: ActivityAdministracionUsuarioBinding
@@ -23,6 +28,15 @@ class AdministrarUsuario : AppCompatActivity() {
     private var genero = ""
     private var id_usuario = 0
     private var crud = ""
+
+    val apiService = RetrofitClient.instance
+    val repository = UserRepositoryImpl(apiService)
+
+    val factory = AdministrarUsuarioViewModelFactory(
+        GetUserByIdUseCase(repository),
+        CreateUserUseCase(repository),
+        UpdateUserUseCase(repository)
+    )
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,15 +51,14 @@ class AdministrarUsuario : AppCompatActivity() {
     }
 
     private fun initUi() {
-        binding.tvTitulo.text =
-            if (crud.equals("crear")) "Crear usuario" else "Editar datos personales"
+        binding.tvTitulo.text = if (crud.equals("crear")) "Crear usuario" else "Editar datos personales"
 
-        viewModel = ViewModelProvider(this)[AdministrarUsuarioViewModel::class.java]
+        viewModel = ViewModelProvider(this, factory)[AdministrarUsuarioViewModel::class.java]
 
         viewModel.user.observe(this) { user ->
             if (user == null) {
                 AlertaError(this, getString(R.string.usuario_no_encontrado)){
-                    setResult(Activity.RESULT_OK)
+                    setResult(RESULT_OK)
                     finish()
                 }
             } else {
@@ -57,12 +70,12 @@ class AdministrarUsuario : AppCompatActivity() {
             if (!error.isNullOrEmpty()) {
                 if (crud.equals("crear")) {
                     AlertaError(this, getString(R.string.ups_no_se_cre_el_usuario_intenta_nuevamente)){
-                        setResult(Activity.RESULT_OK)
+                        setResult(RESULT_OK)
                         finish()
                     }.mostrar()
                 } else {
                     AlertaError(this, getString(R.string.ups_no_se_actualizo_el_usuario_intenta_nuevamente)){
-                        setResult(Activity.RESULT_OK)
+                        setResult(RESULT_OK)
                         finish()
                     }.mostrar()
                 }
@@ -73,7 +86,7 @@ class AdministrarUsuario : AppCompatActivity() {
         viewModel.updated.observe(this) { updated ->
             if (updated) {
                 AlertaExito(this, getString(R.string.registro_actualizado)) {
-                    setResult(Activity.RESULT_OK)
+                    setResult(RESULT_OK)
                     finish()
                 }.mostrar()
             }
@@ -106,7 +119,7 @@ class AdministrarUsuario : AppCompatActivity() {
         viewModel.created.observe(this) { created ->
             if (created) {
                 AlertaExito(this, getString(R.string.usuario_creado)){
-                    setResult(Activity.RESULT_OK)
+                    setResult(RESULT_OK)
                     finish()
                 }
             }

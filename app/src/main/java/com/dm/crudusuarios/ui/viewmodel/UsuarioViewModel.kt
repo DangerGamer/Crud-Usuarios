@@ -1,15 +1,20 @@
-package com.dm.crudusuarios.viewmodel
+package com.dm.crudusuarios.ui.viewmodel
 
-import RetrofitClient
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dm.crudusuarios.model.DeleteUsersRequest
-import com.dm.crudusuarios.model.UsuarioModel
+import com.dm.crudusuarios.domain.model.UsuarioModel
+import com.dm.crudusuarios.domain.usecase.DeleteUsersUseCase
+import com.dm.crudusuarios.domain.usecase.GetUsersByFilterUseCase
+import com.dm.crudusuarios.domain.usecase.GetUsersUseCase
 import kotlinx.coroutines.launch
 
-class UsuarioViewModel: ViewModel() {
+class UsuarioViewModel (
+    private val getUsersUseCase: GetUsersUseCase,
+    private val getUsersByFilterUseCase: GetUsersByFilterUseCase,
+    private val deleteUsersUseCase: DeleteUsersUseCase
+) : ViewModel() {
 
     private val _users = MutableLiveData<List<UsuarioModel>>()
     val users: LiveData<List<UsuarioModel>> = _users
@@ -23,7 +28,7 @@ class UsuarioViewModel: ViewModel() {
     fun fetchUsers() {
         viewModelScope.launch {
             try {
-                val response = RetrofitClient.instance.getUsers()
+                val response = getUsersUseCase()
                 if (response.success) {
                     _users.value = response.data ?: emptyList()
                 } else {
@@ -39,7 +44,7 @@ class UsuarioViewModel: ViewModel() {
     fun fetchUsersByFilter(filter: String) {
         viewModelScope.launch {
             try {
-                val response = RetrofitClient.instance.getUserByFilter(filter)
+                val response = getUsersByFilterUseCase(filter)
                 if (response.success) {
                     _users.value = response.data ?: emptyList()
                 } else {
@@ -57,9 +62,7 @@ class UsuarioViewModel: ViewModel() {
             try {
                 val ids = users.map { it.usu_id }
 
-                val response = RetrofitClient.instance.deleteUsers(
-                    DeleteUsersRequest(ids)
-                )
+                val response = deleteUsersUseCase(ids)
 
                 if (response.success) {
                     _deleted.value = true

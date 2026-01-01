@@ -1,4 +1,4 @@
-package com.dm.crudusuarios.view.adapters
+package com.dm.crudusuarios.ui.view.adapters
 
 import android.content.Context
 import android.content.Intent
@@ -9,8 +9,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.dm.crudusuarios.R
-import com.dm.crudusuarios.model.UsuarioModel
-import com.dm.crudusuarios.view.AdministrarUsuario
+import com.dm.crudusuarios.domain.model.UsuarioModel
+import com.dm.crudusuarios.ui.view.AdministrarUsuario
 
 class UserAdapter(
     private val context: Context,

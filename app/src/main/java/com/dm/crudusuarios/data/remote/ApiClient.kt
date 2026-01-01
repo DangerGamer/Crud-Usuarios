@@ -1,4 +1,4 @@
-import com.dm.crudusuarios.services.ApiService
+import com.dm.crudusuarios.data.remote.ApiService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

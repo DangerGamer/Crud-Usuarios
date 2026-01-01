@@ -16,13 +16,13 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".view.AdministrarUsuario"
+            android:name=".ui.view.AdministrarUsuario"
             android:exported="false"/>
         <activity
             android:name=".view.CreateUser"
             android:exported="false" />
         <activity
-            android:name=".view.HomeActivity"
+            android:name=".ui.view.HomeActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.CrudUsuarios">

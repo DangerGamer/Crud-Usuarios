@@ -1,8 +1,8 @@
-package com.dm.crudusuarios.services
+package com.dm.crudusuarios.data.remote
 
-import com.dm.crudusuarios.model.DeleteUsersRequest
-import com.dm.crudusuarios.model.UsuarioModel
-import com.dm.crudusuarios.model.UsuarioResponse
+import com.dm.crudusuarios.domain.model.DeleteUsersRequest
+import com.dm.crudusuarios.domain.model.UsuarioModel
+import com.dm.crudusuarios.domain.model.UsuarioResponse
 import retrofit2.http.*
 
 interface ApiService {

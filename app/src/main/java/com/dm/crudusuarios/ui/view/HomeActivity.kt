@@ -1,7 +1,7 @@
-package com.dm.crudusuarios.view
+package com.dm.crudusuarios.ui.view
 
+import RetrofitClient
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -11,15 +11,18 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.PopupMenu
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dm.crudusuarios.R
+import com.dm.crudusuarios.data.repository.UserRepositoryImpl
 import com.dm.crudusuarios.databinding.ActivityHomeBinding
-import com.dm.crudusuarios.view.adapters.UserAdapter
-import com.dm.crudusuarios.view.alerts.AlertaExito
-import com.dm.crudusuarios.viewmodel.UsuarioViewModel
+import com.dm.crudusuarios.domain.usecase.DeleteUsersUseCase
+import com.dm.crudusuarios.domain.usecase.GetUsersByFilterUseCase
+import com.dm.crudusuarios.domain.usecase.GetUsersUseCase
+import com.dm.crudusuarios.ui.view.adapters.UserAdapter
+import com.dm.crudusuarios.ui.view.alerts.AlertaExito
+import com.dm.crudusuarios.ui.viewmodel.UsuarioViewModel
+import com.dm.crudusuarios.ui.viewmodel.factory.UsuarioViewModelFactory
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
@@ -30,6 +33,14 @@ class HomeActivity : AppCompatActivity() {
     private var fabInitialX = 0f
     private var fabInitialY = 0f
 
+    val apiService = RetrofitClient.instance
+    val repository = UserRepositoryImpl(apiService)
+
+    val factory = UsuarioViewModelFactory(
+        GetUsersUseCase(repository),
+        GetUsersByFilterUseCase(repository),
+        DeleteUsersUseCase(repository)
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +51,7 @@ class HomeActivity : AppCompatActivity() {
 
     @SuppressLint("ClickableViewAccessibility", "SetTextI18n")
     private fun initUi() {
-        viewModel = ViewModelProvider(this)[UsuarioViewModel::class.java]
+        viewModel = ViewModelProvider(this, factory)[UsuarioViewModel::class.java]
 
         binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -74,7 +85,7 @@ class HomeActivity : AppCompatActivity() {
                 adapter.removeUsers(seleccionados)
 
                 AlertaExito(this, getString(R.string.eliminaci_n_exitosa)) {
-                    setResult(Activity.RESULT_OK)
+                    setResult(RESULT_OK)
                 }.mostrar()
             }
         }
