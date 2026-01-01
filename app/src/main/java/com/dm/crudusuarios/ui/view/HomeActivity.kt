@@ -1,5 +1,6 @@
-package com.dm.crudusuarios.view
+package com.dm.crudusuarios.ui.view
 
+import RetrofitClient
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
@@ -10,14 +11,18 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.PopupMenu
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dm.crudusuarios.R
+import com.dm.crudusuarios.data.repository.UserRepositoryImpl
 import com.dm.crudusuarios.databinding.ActivityHomeBinding
-import com.dm.crudusuarios.view.adapters.UserAdapter
-import com.dm.crudusuarios.viewmodel.UsuarioViewModel
+import com.dm.crudusuarios.domain.usecase.DeleteUsersUseCase
+import com.dm.crudusuarios.domain.usecase.GetUsersByFilterUseCase
+import com.dm.crudusuarios.domain.usecase.GetUsersUseCase
+import com.dm.crudusuarios.ui.view.adapters.UserAdapter
+import com.dm.crudusuarios.ui.view.alerts.AlertaExito
+import com.dm.crudusuarios.ui.viewmodel.UsuarioViewModel
+import com.dm.crudusuarios.ui.viewmodel.factory.UsuarioViewModelFactory
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
@@ -28,6 +33,14 @@ class HomeActivity : AppCompatActivity() {
     private var fabInitialX = 0f
     private var fabInitialY = 0f
 
+    val apiService = RetrofitClient.instance
+    val repository = UserRepositoryImpl(apiService)
+
+    val factory = UsuarioViewModelFactory(
+        GetUsersUseCase(repository),
+        GetUsersByFilterUseCase(repository),
+        DeleteUsersUseCase(repository)
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,9 +49,9 @@ class HomeActivity : AppCompatActivity() {
         initUi()
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint("ClickableViewAccessibility", "SetTextI18n")
     private fun initUi() {
-        viewModel = ViewModelProvider(this)[UsuarioViewModel::class.java]
+        viewModel = ViewModelProvider(this, factory)[UsuarioViewModel::class.java]
 
         binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -49,7 +62,7 @@ class HomeActivity : AppCompatActivity() {
                 Log.i("Buscando", p0.toString())
                 viewModel.fetchUsersByFilter(p0.toString())
             }
-        });
+        })
 
         binding.swipeRefresh.setOnRefreshListener {
             viewModel.fetchUsers()
@@ -65,29 +78,50 @@ class HomeActivity : AppCompatActivity() {
             Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
         }
 
+        viewModel.deleted.observe(this){ deleted ->
+            if (deleted) {
+                val seleccionados = adapter.getSelectedUsers()
 
-        binding.rvUsers.layoutManager = LinearLayoutManager(this);
-        adapter = UserAdapter(this, emptyList())
+                adapter.removeUsers(seleccionados)
+
+                AlertaExito(this, getString(R.string.eliminaci_n_exitosa)) {
+                    setResult(RESULT_OK)
+                }.mostrar()
+            }
+        }
+
+        binding.rvUsers.layoutManager = LinearLayoutManager(this)
+
+        adapter = UserAdapter(this, emptyList()) { selectedCount ->
+            if (selectedCount > 0) {
+                binding.lyContadorSeleccionados.visibility = View.VISIBLE
+                binding.tvContador.text = "Seleccionados: $selectedCount"
+            } else {
+                binding.lyContadorSeleccionados.visibility = View.GONE
+            }
+        }
+
         binding.rvUsers.adapter = adapter
 
-
         viewModel.users.observe(this) { users ->
-            //Toast.makeText(this, "Usuarios cargados: ${users.size}", Toast.LENGTH_SHORT).show()
             adapter.updateData(users)
         }
 
         viewModel.error.observe(this) {
-            Log.e("Error datos ",it)
-            //Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            Log.e("Error datos ", it)
         }
 
         viewModel.fetchUsers()
-        //Toast.makeText(this, "Llamando API...", Toast.LENGTH_SHORT).show()
-
 
         binding.faAcciones.post {
             fabInitialX = binding.faAcciones.translationX
             fabInitialY = binding.faAcciones.translationY
+        }
+
+        binding.btnEliminar.setOnClickListener {
+            val seleccionados = adapter.getSelectedUsers()
+            println(seleccionados)
+            viewModel.deleteUsers(seleccionados)
         }
 
         binding.faAcciones.setOnTouchListener { view, event ->
@@ -125,7 +159,6 @@ class HomeActivity : AppCompatActivity() {
 
                         val fabPairs = listOf(
                             binding.faCrearUsuario to binding.tvCrearUsuario,
-                            binding.faEliminar to binding.tvEliminar,
                         )
 
                         //oclicksUnificados
@@ -134,12 +167,6 @@ class HomeActivity : AppCompatActivity() {
                         }
                         binding.faCrearUsuario.setOnClickListener(crearUsuarioClick)
                         binding.tvCrearUsuario.setOnClickListener(crearUsuarioClick)
-
-                        val eliminarUsuarioClick = View.OnClickListener {
-                            //eliminarSeleccionados()
-                        }
-                        binding.faEliminar.setOnClickListener(eliminarUsuarioClick)
-                        binding.tvEliminar.setOnClickListener(eliminarUsuarioClick)
 
                         fabPairs.forEachIndexed { index, (fab, label) ->
                             fab.visibility = View.VISIBLE
@@ -183,7 +210,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun abrirCrearUsuario() {
         val intent = Intent(this, AdministrarUsuario::class.java)
-        intent.putExtra("crud","crear")
+        intent.putExtra("crud", "crear")
         startActivity(intent)
     }
 
@@ -203,16 +230,12 @@ class HomeActivity : AppCompatActivity() {
 
         listOf(
             binding.faCrearUsuario,
-            binding.faEliminar,
-            binding.tvCrearUsuario,
-            binding.tvEliminar
+            binding.tvCrearUsuario
         ).forEach {
             it.visibility = View.GONE
             it.alpha = 0f
         }
     }
-
-
 
     override fun onResume() {
         super.onResume()

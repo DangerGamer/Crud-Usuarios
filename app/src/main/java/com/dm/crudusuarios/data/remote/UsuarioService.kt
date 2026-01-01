@@ -1,7 +1,8 @@
-package com.dm.crudusuarios.services
+package com.dm.crudusuarios.data.remote
 
-import com.dm.crudusuarios.model.UsuarioModel
-import com.dm.crudusuarios.model.UsuarioResponse
+import com.dm.crudusuarios.domain.model.DeleteUsersRequest
+import com.dm.crudusuarios.domain.model.UsuarioModel
+import com.dm.crudusuarios.domain.model.UsuarioResponse
 import retrofit2.http.*
 
 interface ApiService {
@@ -23,4 +24,9 @@ interface ApiService {
 
     @DELETE("users/delete")
     suspend fun deleteUser(@Query("id") id: Int): UsuarioResponse<Unit>
+
+    @HTTP(method = "DELETE", path = "users/delete", hasBody = true)
+    suspend fun deleteUsers(
+        @Body request: DeleteUsersRequest
+    ): UsuarioResponse<Unit>
 }

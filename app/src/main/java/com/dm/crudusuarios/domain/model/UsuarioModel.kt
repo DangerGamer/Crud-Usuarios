@@ -1,4 +1,4 @@
-package com.dm.crudusuarios.model
+package com.dm.crudusuarios.domain.model
 
 import android.os.Parcel
 import android.os.Parcelable
