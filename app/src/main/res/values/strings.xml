@@ -17,4 +17,6 @@
     <string name="g_nero">Género</string>
     <string name="ups_no_se_cre_el_usuario_intenta_nuevamente">Ups! no se creó el usuario, intenta nuevamente</string>
     <string name="usuario_creado">Usuario creado!</string>
+    <string name="eliminaci_n_exitosa">Eliminación exitosa!</string>
+    <string name="usuario_no_encontrado">Usuario no encontrado.</string>
 </resources>

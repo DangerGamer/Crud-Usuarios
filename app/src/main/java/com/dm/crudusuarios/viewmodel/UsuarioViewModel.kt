@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dm.crudusuarios.model.DeleteUsersRequest
 import com.dm.crudusuarios.model.UsuarioModel
 import kotlinx.coroutines.launch
 
@@ -15,6 +16,9 @@ class UsuarioViewModel: ViewModel() {
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
+
+    private val _deleted = MutableLiveData<Boolean>()
+    val deleted: LiveData<Boolean> = _deleted
 
     fun fetchUsers() {
         viewModelScope.launch {
@@ -48,25 +52,26 @@ class UsuarioViewModel: ViewModel() {
         }
     }
 
-    fun addUser(usu_id: Int, usu_nombre: String, usu_papellido: String, usu_sapellido: String, usu_direccion: String, usu_telefono: String, usu_correo: String, usu_genero: String) {
+    fun deleteUsers(users: List<UsuarioModel>) {
         viewModelScope.launch {
             try {
-                val newUser = UsuarioModel(
-                    usu_id = usu_id,
-                    usu_nombre = usu_nombre,
-                    usu_papellido = usu_papellido,
-                    usu_sapellido = usu_sapellido,
-                    usu_direccion = usu_direccion,
-                    usu_telefono = usu_telefono,
-                    usu_correo = usu_correo,
-                    usu_genero = usu_genero
+                val ids = users.map { it.usu_id }
+
+                val response = RetrofitClient.instance.deleteUsers(
+                    DeleteUsersRequest(ids)
                 )
-                val response = RetrofitClient.instance.createUser(newUser)
-                _error.value = response.error ?: "Usuario creado"
-                fetchUsers()
+
+                if (response.success) {
+                    _deleted.value = true
+                } else {
+                    _error.value = response.error ?: response.message
+                }
+
             } catch (e: Exception) {
-                _error.value = "Error al crear usuario: ${e.message}"
+                _error.value = "Error: ${e.message}"
             }
         }
     }
+
+
 }

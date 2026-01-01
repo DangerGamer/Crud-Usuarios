@@ -40,13 +40,41 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etSearch"/>
 
+    <LinearLayout
+        android:id="@+id/lyContadorSeleccionados"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tvContador"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="8dp"
+            tools:text="Seleccionados: 8"
+            android:textSize="18sp"
+            android:textAlignment="center"/>
+
+        <Button
+            android:id="@+id/btnEliminar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Eliminar" />
+    </LinearLayout>
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTitle"
+        app:layout_constraintTop_toBottomOf="@+id/lyContadorSeleccionados"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -70,7 +98,7 @@
         app:tint="@null"
         app:fabSize="normal"
         app:maxImageSize="56dp"
-        app:layout_constraintBottom_toTopOf="@+id/faEliminar"
+        app:layout_constraintBottom_toTopOf="@+id/faAcciones"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
@@ -85,35 +113,6 @@
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@id/faCrearUsuario"
         app:layout_constraintEnd_toStartOf="@id/faCrearUsuario"
-        android:layout_marginEnd="8dp"/>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        style="@style/Widget.MaterialComponents.FloatingActionButton"
-        android:id="@+id/faEliminar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:visibility="gone"
-        android:contentDescription="Eliminar"
-        android:src="@drawable/eliminar_usuario"
-        app:tint="@null"
-        app:fabSize="normal"
-        app:maxImageSize="56dp"
-        app:layout_constraintBottom_toTopOf="@+id/faAcciones"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <TextView
-        android:id="@+id/tvEliminar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Eliminar"
-        android:textSize="14sp"
-        android:background="@drawable/bg_menu_acciones"
-        android:padding="8dp"
-        android:visibility="gone"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="@id/faEliminar"
-        app:layout_constraintEnd_toStartOf="@id/faEliminar"
         android:layout_marginEnd="8dp"/>
 
 

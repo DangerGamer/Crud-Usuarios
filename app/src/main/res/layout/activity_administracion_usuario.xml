@@ -151,6 +151,7 @@
                 android:id="@+id/etTelefono"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="number"
                 android:hint="@string/telefono" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -175,6 +176,7 @@
                 android:id="@+id/etCorreo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
                 android:hint="@string/correo" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -204,6 +206,8 @@
                 android:paddingHorizontal="16dp"
                 android:textColor="@android:color/black"
                 android:textSize="16sp"
+                android:focusable="false"
+                android:cursorVisible="false"
                 tools:ignore="LabelFor" />
         </com.google.android.material.textfield.TextInputLayout>
 
