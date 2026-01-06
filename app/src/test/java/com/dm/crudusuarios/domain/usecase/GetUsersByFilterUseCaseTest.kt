@@ -3,12 +3,14 @@ package com.dm.crudusuarios.domain.usecase
 import com.dm.crudusuarios.domain.model.UsuarioModel
 import com.dm.crudusuarios.domain.model.UsuarioResponse
 import com.dm.crudusuarios.domain.repository.UserRepository
+import io.mockk.coEvery
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 
 class GetUsersByFilterUseCaseTest{
     private lateinit var repository: UserRepository
@@ -16,7 +18,7 @@ class GetUsersByFilterUseCaseTest{
 
     @Before
     fun setUp(){
-        repository = mock()
+        repository = mockk()
         useCase = GetUsersByFilterUseCase(repository)
     }
 
@@ -28,7 +30,7 @@ class GetUsersByFilterUseCaseTest{
             data =  lista
         )
 
-        whenever(repository.getUserByFilter("juan")).thenReturn(response)
+        coEvery { repository.getUserByFilter("juan") } returns response
 
         assertTrue(response.success)
         assertEquals("juan", response.data?.get(0)?.usu_nombre)
@@ -43,7 +45,7 @@ class GetUsersByFilterUseCaseTest{
             message = "No se hallaron coincidencias"
         )
 
-        whenever(repository.getUserByFilter("juan")).thenReturn(response)
+        coEvery { repository.getUserByFilter("juan") } returns response
 
         assertFalse(response.success)
     }

@@ -3,12 +3,14 @@ package com.dm.crudusuarios.domain.usecase
 import com.dm.crudusuarios.domain.model.UsuarioModel
 import com.dm.crudusuarios.domain.model.UsuarioResponse
 import com.dm.crudusuarios.domain.repository.UserRepository
+import io.mockk.coEvery
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 
 class UpdateUserUseCaseTest{
     private lateinit var repository: UserRepository
@@ -16,7 +18,7 @@ class UpdateUserUseCaseTest{
 
     @Before
     fun setUp(){
-        repository = mock()
+        repository = mockk()
         useCase = UpdateUserUseCase(repository)
     }
 
@@ -30,7 +32,7 @@ class UpdateUserUseCaseTest{
             message = "Usuario actualizado"
         )
 
-        whenever(repository.updateUser(user)).thenReturn(response)
+        coEvery { repository.updateUser(user) } returns response
 
         assertTrue(response.success)
     }
@@ -46,7 +48,7 @@ class UpdateUserUseCaseTest{
             error = "No existe el id"
         )
 
-        whenever(repository.updateUser(user)).thenReturn(response)
+        coEvery { repository.updateUser(user) } returns response
 
         assertFalse(response.success)
         assertEquals("No se pudo actualizar el usuario", response.message)

@@ -8,6 +8,7 @@ class GetUserByIdUseCase(
     private val repository: UserRepository
 ) {
     suspend operator fun invoke(filter: Int?): UsuarioResponse<UsuarioModel> {
+        requireNotNull(filter){ "El id no puede ser null" }
         return repository.getUserById(filter)
     }
 }

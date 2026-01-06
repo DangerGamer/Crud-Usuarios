@@ -3,14 +3,15 @@ package com.dm.crudusuarios.domain.usecase
 import com.dm.crudusuarios.domain.model.UsuarioModel
 import com.dm.crudusuarios.domain.model.UsuarioResponse
 import com.dm.crudusuarios.domain.repository.UserRepository
+import io.mockk.coEvery
+import io.mockk.every
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 
 class CreateUserUseCaseTest{
     private lateinit var repository: UserRepository
@@ -18,7 +19,7 @@ class CreateUserUseCaseTest{
 
     @Before
     fun setUp(){
-        repository = mock()
+        repository = mockk()
         useCase = CreateUserUseCase(repository)
     }
 
@@ -32,7 +33,7 @@ class CreateUserUseCaseTest{
             message = "Usuario creado"
         )
 
-        whenever(repository.createUser(user)).thenReturn(response)
+        coEvery { repository.createUser(user) } returns response
 
         assertTrue(response.success)
     }
@@ -48,7 +49,7 @@ class CreateUserUseCaseTest{
             error = "Datos incompletos"
         )
 
-        whenever(repository.createUser(user)).thenReturn(response)
+        coEvery { repository.createUser(user) } returns response
 
         assertFalse(response.success)
         assertEquals("No se pudo crear el usuario", response.message)

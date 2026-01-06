@@ -30,7 +30,7 @@ class AdministrarUsuarioViewModel(
     private val _created = MutableLiveData<Boolean>()
     val created: LiveData<Boolean> = _created
 
-    fun fetchUsersById(id: Int?) {
+    fun fetchUsersById(id: Int) {
         viewModelScope.launch {
             try {
                 val response = getUserByIdUseCase(id)
