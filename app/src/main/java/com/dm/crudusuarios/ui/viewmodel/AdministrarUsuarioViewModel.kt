@@ -71,7 +71,7 @@ class AdministrarUsuarioViewModel(
         viewModelScope.launch {
             try {
                 val response = createUserUseCase(user)
-                _updated.value = response.success
+                _created.value = response.success
                 if (!response.success){
                     _error.value = response.error
                 }

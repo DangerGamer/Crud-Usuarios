@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Crud Usuarios</string>
+    <string name="app_name">Usuarios</string>
     <string name="guardar">Guardar</string>
     <string name="nombre">Nombre</string>
     <string name="primer_apellido">Primer apellido</string>
