@@ -11,10 +11,12 @@ data class UsuarioModel (
     val usu_direccion: String,
     val usu_telefono: String,
     val usu_correo: String,
-    val usu_genero: String
+    val usu_genero: String,
+    val usu_icono: String
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readInt(),
+        parcel.readString().toString(),
         parcel.readString().toString(),
         parcel.readString().toString(),
         parcel.readString().toString(),
@@ -34,6 +36,7 @@ data class UsuarioModel (
         parcel.writeString(usu_telefono)
         parcel.writeString(usu_correo)
         parcel.writeString(usu_genero)
+        parcel.writeString(usu_icono)
     }
 
     override fun describeContents(): Int {

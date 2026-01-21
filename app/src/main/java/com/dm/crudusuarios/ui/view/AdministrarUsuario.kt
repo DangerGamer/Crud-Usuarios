@@ -8,8 +8,11 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.dm.crudusuarios.R
 import com.dm.crudusuarios.data.repository.UserRepositoryImpl
 import com.dm.crudusuarios.databinding.ActivityAdministracionUsuarioBinding
@@ -17,14 +20,19 @@ import com.dm.crudusuarios.domain.model.UsuarioModel
 import com.dm.crudusuarios.domain.usecase.CreateUserUseCase
 import com.dm.crudusuarios.domain.usecase.GetUserByIdUseCase
 import com.dm.crudusuarios.domain.usecase.UpdateUserUseCase
+import com.dm.crudusuarios.ui.view.adapters.IconsAdapter
 import com.dm.crudusuarios.ui.view.alerts.AlertaError
 import com.dm.crudusuarios.ui.view.alerts.AlertaExito
 import com.dm.crudusuarios.ui.viewmodel.AdministrarUsuarioViewModel
 import com.dm.crudusuarios.ui.viewmodel.factory.AdministrarUsuarioViewModelFactory
+import com.dm.crudusuarios.utils.getIconos
 
 class AdministrarUsuario : AppCompatActivity() {
     private lateinit var binding: ActivityAdministracionUsuarioBinding
     private lateinit var viewModel: AdministrarUsuarioViewModel
+    private lateinit var dialog: AlertDialog
+    private var name = ""
+    private val iconos = getIconos()
     private var genero = ""
     private var id_usuario = 0
     private var crud = ""
@@ -125,6 +133,9 @@ class AdministrarUsuario : AppCompatActivity() {
             }
         }
 
+        binding.btnCambiarIcono.setOnClickListener {
+            showIconsDialog()
+        }
 
         val opcionesGenero = listOf("Masculino", "Femenino")
         val generoAdapter = ArrayAdapter(
@@ -154,7 +165,8 @@ class AdministrarUsuario : AppCompatActivity() {
                 binding.etDireccion.text.toString(),
                 binding.etTelefono.text.toString(),
                 binding.etCorreo.text.toString(),
-                generoSeleccionado
+                generoSeleccionado,
+                name
             )
 
             if (crud.equals("crear")) {
@@ -165,7 +177,39 @@ class AdministrarUsuario : AppCompatActivity() {
         }
     }
 
+    private fun showIconsDialog() {
+
+        val names = mutableListOf<String>()
+
+        for (s in iconos) {
+            names.add(s.key)
+        }
+
+
+        val view = layoutInflater.inflate(R.layout.dialog_icono, null)
+        val rvIcons = view.findViewById<RecyclerView>(R.id.rvIcons)
+        rvIcons.layoutManager = GridLayoutManager(this, 3)
+        rvIcons.adapter = IconsAdapter(names) { selectedAvatar ->
+            name = selectedAvatar
+            val resId = resources.getIdentifier(
+                selectedAvatar,
+                "drawable",
+                packageName
+            )
+
+            binding.ivLogoUsuario.setImageResource(resId)
+            dialog.dismiss()
+        }
+
+        dialog = AlertDialog.Builder(this)
+            .setView(view)
+            .create()
+        dialog.show()
+    }
+
+
     private fun mostrarDatos(user: UsuarioModel) {
+        binding.ivLogoUsuario.setImageResource(iconos[user.usu_icono] ?: R.drawable.galeria)
         binding.etNombre.setText(user.usu_nombre)
         binding.etPrimerApellido.setText(user.usu_papellido)
         binding.etSegundoApellido.setText(user.usu_sapellido)

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dm.crudusuarios.R
 import com.dm.crudusuarios.domain.model.UsuarioModel
 import com.dm.crudusuarios.ui.view.AdministrarUsuario
+import com.dm.crudusuarios.utils.getIconos
 
 class UserAdapter(
     private val context: Context,
@@ -19,23 +20,7 @@ class UserAdapter(
 ) :
     RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
-    private val logosM = listOf(
-        R.drawable.h_1,
-        R.drawable.h_2,
-        R.drawable.h_3,
-        R.drawable.h_4,
-        R.drawable.h_5,
-        R.drawable.h_6
-    )
-
-    private val logosF = listOf(
-        R.drawable.m_1,
-        R.drawable.m_2,
-        R.drawable.m_3,
-        R.drawable.m_4,
-        R.drawable.m_5,
-        R.drawable.m_6
-    )
+    private val iconos = getIconos()
 
     private val selectedIds = mutableSetOf<Int>()
     private var selectionMode = false
@@ -49,7 +34,6 @@ class UserAdapter(
 
         users = users.filterNot { idsToRemove.contains(it.usu_id) }
 
-        // 🔥 LIMPIEZA REAL
         selectedIds.removeAll(idsToRemove)
 
         if (selectedIds.isEmpty()) {
@@ -111,8 +95,7 @@ class UserAdapter(
             holder.tvDireccion.setTextColor(holder.defaultSecondaryColor)
         }
 
-        val randomLogo = if (user.usu_genero == "M") logosM.random() else logosF.random()
-        holder.ivUser.setImageResource(randomLogo)
+        holder.ivUser.setImageResource(iconos[user.usu_icono] ?: R.drawable.galeria)
         holder.tvName.text = """${user.usu_nombre} ${user.usu_papellido} ${user.usu_sapellido}"""
         holder.tvEmail.text = user.usu_correo
         holder.tvTelefono.text = user.usu_telefono
