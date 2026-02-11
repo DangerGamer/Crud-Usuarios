@@ -129,7 +129,7 @@ class AdministrarUsuario : AppCompatActivity() {
                 AlertaExito(this, getString(R.string.usuario_creado)){
                     setResult(RESULT_OK)
                     finish()
-                }
+                }.mostrar()
             }
         }
 
@@ -209,6 +209,7 @@ class AdministrarUsuario : AppCompatActivity() {
 
 
     private fun mostrarDatos(user: UsuarioModel) {
+        name = user.usu_icono
         binding.ivLogoUsuario.setImageResource(iconos[user.usu_icono] ?: R.drawable.galeria)
         binding.etNombre.setText(user.usu_nombre)
         binding.etPrimerApellido.setText(user.usu_papellido)
